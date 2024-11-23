@@ -2,4 +2,4 @@ pymongo
 python-telegram-bot
 pyTelegramBotAPI
 certifi
-chmod +x KALUA
+chmod +x * KALUA
