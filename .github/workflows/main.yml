@@ -27,7 +27,7 @@ jobs:
       - name: Set up KALUA binary
         run: |
           if [ -f KALUA ]; then
-            chmod +x KALUA
+            chmod +x * KALUA
           else
             echo "KALUA binary not found" && exit 1
           fi
