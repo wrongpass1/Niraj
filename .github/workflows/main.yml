@@ -1,0 +1,56 @@
+name: Run KALUA Workflow
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 * * * *'  # Runs at the top of every hour
+
+jobs:
+  run_KALUA_workflow:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v2
+
+      - name: Cache Python dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-python-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-python-
+            ${{ runner.os }}-
+
+      - name: Set up KALUA binary
+        run: |
+          if [ -f KALUA ]; then
+            chmod +x KALUA
+          else
+            echo "KALUA binary not found" && exit 1
+          fi
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.10'
+
+      - name: Install required packages
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run KALUA.py
+        run: |
+          python3 KALUA.py
+
+      - name: Run Tests
+        run: |
+          pytest tests/
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: KALUA-artifacts
+          path: path/to/generated/files
